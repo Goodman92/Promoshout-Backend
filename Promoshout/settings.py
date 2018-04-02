@@ -26,7 +26,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #External stuff
-    'channels'
+    'channels',
+    'core',
+    'chat',
+    'django_countries',
+    'timezone_field'
 ]
 
 MIDDLEWARE = [
@@ -61,14 +65,27 @@ TEMPLATES = [
 ASGI_APPLICATION = 'Promoshout.routing.application'
 #WSGI_APPLICATION = 'Promoshout.wsgi.application'
 
-DATABASES = {
+CHANNEL_LAYERS = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)]
+        }
     }
 }
 
-
+DATABASES = {
+    'default': {
+        'NAME': 'promoshout',
+        'USER': 'postgres',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '5432',
+        'ATOMIC_REQUESTS': True,
+        'CONN_MAX_AGE': 5,
+    }
+}
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
@@ -106,3 +123,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+AUTH_USER_MODEL = 'core.User'
+
